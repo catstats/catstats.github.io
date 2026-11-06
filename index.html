@@ -18,9 +18,10 @@
     })();
   </script>
   <script src="assets/theme.js?v=2" defer></script>
+  <script src="assets/email.js" defer></script>
   <style>
-    :root { color-scheme: light; --bg: #faf9f6; --text: #242424; --muted: #64625e; --line: #deddd7; --accent: #855a32; --surface: #efeee9; --intro: #474642; --author: #282724; --underline: #b6afa4; --avatar-bg: #f0ebe3; --avatar-line: #d3c8b9; --paper-line: #e4e2dc; --paper-link: #60605b; --uai-link: #a24600; --neurips-link: #285dc2; }
-    :root[data-theme="dark"] { color-scheme: dark; --bg: #141516; --text: #eeedeb; --muted: #aaa9a6; --line: #303233; --accent: #d6b692; --surface: #1d1f20; --intro: #cfceca; --author: #d9d7d2; --underline: #66635e; --avatar-bg: #1c1c1b; --avatar-line: #49433c; --paper-line: #292b2c; --paper-link: #b9b9b5; --uai-link: #ff873b; --neurips-link: #91baff; }
+    :root { color-scheme: light; --bg: #faf9f6; --text: #242424; --muted: #64625e; --line: #deddd7; --accent: #855a32; --surface: #efeee9; --intro: #474642; --author: #282724; --underline: #b6afa4; --avatar-bg: #f0ebe3; --avatar-line: #d3c8b9; --paper-line: #e4e2dc; --paper-link: #60605b; --uai-link: #A6532D; --neurips-link: #4D6E9E; }
+    :root[data-theme="dark"] { color-scheme: dark; --bg: #141516; --text: #eeedeb; --muted: #aaa9a6; --line: #303233; --accent: #d6b692; --surface: #1d1f20; --intro: #cfceca; --author: #d9d7d2; --underline: #66635e; --avatar-bg: #1c1c1b; --avatar-line: #49433c; --paper-line: #292b2c; --paper-link: #b9b9b5; --uai-link: #DCA17D; --neurips-link: #A0B8DB; }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; scroll-padding-top: 24px; }
     body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
@@ -50,33 +51,51 @@
     .contact-links { gap: 12px 24px; }
     .contact-link { display: inline-flex; align-items: center; gap: 8px; min-height: 26px; text-decoration: none; }
     .contact-link svg { width: 18px; height: 18px; flex: 0 0 18px; fill: currentColor; color: var(--muted); }
+    .contact-link .linkedin-icon { width: 16px; height: 16px; flex-basis: 16px; }
     .contact-link span { text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: var(--underline); text-underline-offset: 4px; }
     .contact-link:hover svg { color: currentColor; }
     .contact-link:hover span { text-decoration-color: currentColor; }
+    .email-trigger { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+    .email-trigger:hover { color: var(--accent); }
+    .email-dialog { width: min(440px, calc(100% - 40px)); max-height: calc(100vh - 40px); margin: auto; padding: 24px; overflow: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); color: var(--text); font: inherit; box-shadow: 0 20px 70px rgb(0 0 0 / .22); }
+    .email-dialog::backdrop { background: rgb(0 0 0 / .4); }
+    .email-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .email-dialog h2 { font-size: 25px; }
+    .email-close { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; flex-shrink: 0; border: 0; border-radius: 6px; background: none; color: var(--muted); cursor: pointer; }
+    .email-close:hover { background: var(--surface); color: var(--text); }
+    .email-close svg { width: 18px; height: 18px; }
+    .email-help { margin: 10px 0 18px; color: var(--muted); font-size: 14px; }
+    .email-copy-row { display: flex; align-items: stretch; gap: 10px; }
+    .email-address { min-width: 0; width: 100%; flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--text); font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .email-address:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .email-copy-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 88px; padding: 10px 12px; flex-shrink: 0; border: 1px solid var(--underline); border-radius: 7px; background: none; color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+    .email-copy-button:hover { background: var(--surface); }
+    .email-copy-button:disabled { cursor: wait; opacity: .65; }
+    .email-copy-button svg { width: 16px; height: 16px; }
+    .email-copy-status { min-height: 1.6em; margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
     section + section { border-top: 1px solid var(--line); padding: 38px 0 42px; }
     .section-title { display: flex; align-items: baseline; gap: 16px; margin-bottom: 26px; }
     h2 { margin: 0; font: 28px/1.3 Georgia, "Times New Roman", serif; letter-spacing: -.4px; }
     #publications .section-title { margin-bottom: 8px; }
     .papers { list-style: none; padding: 0; margin: 0; }
-    .paper { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 28px; padding: 28px 0; }
+    .paper { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 20px; padding: 28px 0; }
     .paper:last-child { padding-bottom: 4px; }
-    .paper-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; padding-top: 3px; }
+    .paper-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; padding-top: 4px; }
     .paper-body { min-width: 0; }
     .paper h3 { margin-bottom: 7px; font-size: 18px; font-weight: 550; line-height: 1.5; letter-spacing: -.15px; }
     .paper h3 a:hover { color: var(--paper-accent); text-decoration-thickness: 1px; }
-    .paper-uai { --paper-accent: var(--uai-link); }
-    .paper-neurips { --paper-accent: var(--neurips-link); }
-    .paper-link { display: inline-block; margin-top: 12px; color: var(--paper-link); font-size: 12px; line-height: 1.5; text-decoration: underline; }
+    .paper-uai { --paper-accent: var(--uai-link); --venue-line: #BA6434; }
+    .paper-neurips { --paper-accent: var(--neurips-link); --venue-line: #5779A9; }
+    .paper-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+    .paper-link { display: inline-block; color: var(--paper-link); font-size: 12px; line-height: 1.5; text-decoration: underline; }
     .paper-link:hover { color: var(--paper-accent); text-decoration-color: currentColor; }
-    .year { font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); }
     h3 { margin: 0 0 5px; font-size: 17px; font-weight: 550; line-height: 1.55; }
     h3 a { text-decoration: none; }
     h3 a:hover { text-decoration: underline; }
     .authors { margin: 0; color: var(--muted); font-size: 13px; }
     .authors strong { color: var(--author); font-weight: 500; }
-    .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; color: #181a1d; font-size: 11px; font-weight: 750; line-height: 1.5; letter-spacing: .2px; }
-    .badge-uai { background: #ff700c; }
-    .badge-neurips { background: #91baff; }
+    .venue-label { display: inline-flex; align-items: center; gap: 10px; color: var(--paper-accent); font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap; }
+    .venue-label::before { content: ""; width: 3px; height: 20px; flex: 0 0 3px; border-radius: 2px; background: var(--venue-line); }
     .software { max-width: 620px; }
     .software h3 { font-size: 20px; }
     .software p { margin: 8px 0 14px; color: var(--muted); font-size: 14px; }
@@ -92,6 +111,8 @@
       nav { gap: 8px 18px; }
       .about { grid-template-columns: 1fr; padding: 38px 0; gap: 22px; }
       .monogram { width: 72px; height: 72px; margin-top: 0; font-size: 26px; }
+      .email-dialog { padding: 20px; }
+      .email-copy-row { flex-direction: column; }
       h1 { font-size: 42px; }
       .paper { grid-template-columns: 1fr; gap: 12px; padding: 24px 0; }
       .paper-meta { flex-direction: row; align-items: center; gap: 10px; padding-top: 0; }
@@ -104,7 +125,7 @@
       :root, :root[data-theme] { color-scheme: light; --bg: white; --text: #171717; --muted: #444; --line: #ccc; --accent: #634421; --paper-line: #ddd; --paper-link: #444; --uai-link: #634421; --neurips-link: #23488c; }
       body { font-size: 11pt; }
       .wrap { width: 100%; }
-      header, footer, .monogram { display: none; }
+      header, footer, .monogram, .email-dialog { display: none; }
       .about { display: block; padding-top: 0; }
       .intro, .authors strong { color: #333; }
       section, .paper { break-inside: avoid; }
@@ -132,13 +153,13 @@
         <div>
           <p class="eyebrow">Statistics & Machine Learning</p>
           <h1 id="name">Zhongli Jiang</h1>
-          <p class="intro">I received my Ph.D. in Statistics from Purdue University in 2024 and my master’s degree in Statistics from Purdue University in 2019. I earned my bachelor’s degree in Statistics and Operations Research from Hong Kong Baptist University in 2017. I worked as a full-stack data scientist at Sysco.</p>
+          <p class="intro">I received my Ph.D. in Statistics from Purdue University in 2024 and my master’s degree in Statistics from Purdue University in 2019. I earned my bachelor’s degree in Statistics and Operations Research from Hong Kong Baptist University in 2017. I worked as a full-stack data scientist at Sysco, analyzing large-scale enterprise data and developing AI agents to deliver actionable business insights.</p>
           <p class="intro">My research interests include representation learning, explainable artificial intelligence, causal inference, and bioinformatics. I also develop open-source software for statistical computing and reproducible research.</p>
           <div class="links contact-links">
-            <a class="contact-link" href="mailto:zhongli.jiang.stats@gmail.com">
+            <button class="contact-link email-trigger" id="email-trigger" type="button" aria-haspopup="dialog" aria-controls="email-dialog">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
               <span>Email</span>
-            </a>
+            </button>
             <a class="contact-link" href="https://scholar.google.com/citations?user=Nfc9bfYAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer" aria-label="Google Scholar profile">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5 1 8.5 12 14.5l8-4.36V17h2V8.5L12 2.5Z"/><path d="M5 12.7v4.8c4.7 3.1 9.3 3.1 14 0v-4.8l-7 3.82-7-3.82Z"/></svg>
               <span>Scholar</span>
@@ -146,6 +167,10 @@
             <a class="contact-link" href="https://github.com/catstats" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.128-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.664 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.431 0-1.196.426-2.186 1.128-2.956-.11-.275-.495-1.403.11-2.915 0 0 .921-.288 3.025 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.512.22 2.64.11 2.915.701.77 1.128 1.747 1.128 2.956 0 4.221-2.571 5.156-5.019 5.431.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"/></svg>
               <span>GitHub</span>
+            </a>
+            <a class="contact-link" href="https://www.linkedin.com/in/zhongli-jiang-b140b991/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+              <svg class="linkedin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.35V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286ZM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124ZM7.119 20.452H3.555V9h3.564v11.452ZM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003Z"/></svg>
+              <span>LinkedIn</span>
             </a>
           </div>
         </div>
@@ -155,24 +180,27 @@
         <ol class="papers">
           <li class="paper paper-uai">
             <div class="paper-meta">
-              <span class="badge badge-uai">UAI</span>
-              <span class="year">2025</span>
+              <span class="venue-label">UAI 2025</span>
             </div>
             <div class="paper-body">
               <h3><a href="https://proceedings.mlr.press/v286/jiang25a.html" target="_blank" rel="noopener noreferrer">Fast Calculation of Feature Contributions in Boosting Trees</a></h3>
               <p class="authors"><strong>Zhongli Jiang</strong>, Min Zhang, and Dabao Zhang</p>
-              <a class="paper-link" href="https://proceedings.mlr.press/v286/jiang25a.html" target="_blank" rel="noopener noreferrer" aria-label="Read Fast Calculation of Feature Contributions in Boosting Trees">Read paper</a>
+              <div class="paper-actions">
+                <a class="paper-link" href="https://proceedings.mlr.press/v286/jiang25a.html" target="_blank" rel="noopener noreferrer" aria-label="Paper: Fast Calculation of Feature Contributions in Boosting Trees">Paper</a>
+                <a class="paper-link" href="https://github.com/catstats/Q-SHAP" target="_blank" rel="noopener noreferrer" aria-label="Code: Fast Calculation of Feature Contributions in Boosting Trees">Code</a>
+              </div>
             </div>
           </li>
           <li class="paper paper-neurips">
             <div class="paper-meta">
-              <span class="badge badge-neurips">NeurIPS</span>
-              <span class="year">2023</span>
+              <span class="venue-label">NeurIPS 2023</span>
             </div>
             <div class="paper-body">
               <h3><a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/26c233f48fb05bbd52a520e4bb9e3760-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer">Analysis of Variance of Multiple Causal Networks</a></h3>
               <p class="authors"><strong>Zhongli Jiang</strong> and Dabao Zhang</p>
-              <a class="paper-link" href="https://proceedings.neurips.cc/paper_files/paper/2023/file/26c233f48fb05bbd52a520e4bb9e3760-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer" aria-label="Read Analysis of Variance of Multiple Causal Networks">Read paper</a>
+              <div class="paper-actions">
+                <a class="paper-link" href="https://proceedings.neurips.cc/paper_files/paper/2023/file/26c233f48fb05bbd52a520e4bb9e3760-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer" aria-label="Paper: Analysis of Variance of Multiple Causal Networks">Paper</a>
+              </div>
             </div>
           </li>
         </ol>
@@ -206,6 +234,23 @@
     </main>
     <footer><span>© 2026 Zhongli Jiang</span><a href="#top">Back to top</a></footer>
   </div>
+  <dialog class="email-dialog" id="email-dialog" aria-labelledby="email-title" aria-describedby="email-help">
+    <div class="email-dialog-header">
+      <h2 id="email-title">Email</h2>
+      <button class="email-close" id="email-close" type="button" aria-label="Close email window">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="email-help" id="email-help">Copy my email address to get in touch.</p>
+    <div class="email-copy-row">
+      <input class="email-address" id="email-address" type="text" value="zhongli.jiang.stats@gmail.com" readonly spellcheck="false" aria-label="Email address">
+      <button class="email-copy-button" id="email-copy" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+        <span id="email-copy-label">Copy</span>
+      </button>
+    </div>
+    <p class="email-copy-status" id="email-copy-status" role="status" aria-live="polite"></p>
+  </dialog>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"4beb7ee83dfd435abd053022c8f48034"}'></script>
   <!-- End Cloudflare Web Analytics -->
