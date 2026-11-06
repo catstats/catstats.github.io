@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zhongli Jiang — representation learning, explainable artificial intelligence, causal inference, and bioinformatics. Selected publications and open-source software.">
+  <meta name="theme-color" content="#141516">
+  <title>Zhongli Jiang | Statistics & Machine Learning</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>
+    (() => {
+      let saved = null;
+      try { saved = localStorage.getItem('zhongli-theme'); } catch (_) {}
+      const theme = saved === 'light' || saved === 'dark'
+        ? saved : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#141516' : '#faf9f6';
+    })();
+  </script>
+  <script src="assets/theme.js" defer></script>
+  <style>
+    :root { color-scheme: light; --bg: #faf9f6; --text: #242424; --muted: #64625e; --line: #deddd7; --accent: #855a32; --surface: #efeee9; --intro: #474642; --author: #282724; --underline: #b6afa4; --avatar-bg: #f0ebe3; --avatar-line: #d3c8b9; --paper-line: #e4e2dc; --paper-link: #60605b; --uai-link: #a24600; --neurips-link: #285dc2; }
+    :root[data-theme="dark"] { color-scheme: dark; --bg: #141516; --text: #eeedeb; --muted: #aaa9a6; --line: #303233; --accent: #d6b692; --surface: #1d1f20; --intro: #cfceca; --author: #d9d7d2; --underline: #66635e; --avatar-bg: #1c1c1b; --avatar-line: #49433c; --paper-line: #292b2c; --paper-link: #b9b9b5; --uai-link: #ff873b; --neurips-link: #91baff; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) { color-scheme: dark; --bg: #141516; --text: #eeedeb; --muted: #aaa9a6; --line: #303233; --accent: #d6b692; --surface: #1d1f20; --intro: #cfceca; --author: #d9d7d2; --underline: #66635e; --avatar-bg: #1c1c1b; --avatar-line: #49433c; --paper-line: #292b2c; --paper-link: #b9b9b5; --uai-link: #ff873b; --neurips-link: #91baff; }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration-color: var(--underline); text-underline-offset: 5px; }
+    a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 2px; }
+    .skip { position: absolute; top: -100px; left: 16px; padding: 8px 16px; background: var(--surface); }
+    .skip:focus { top: 10px; }
+    .wrap { width: min(900px, calc(100% - 64px)); margin: 0 auto; }
+    header { display: flex; justify-content: flex-end; align-items: center; gap: 24px; padding: 32px 0; border-bottom: 1px solid var(--line); }
+    nav { display: flex; gap: 26px; flex-wrap: wrap; }
+    nav a { font-size: 14px; color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--text); }
+    .theme-toggle { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; flex: 0 0 40px; border: 0; border-radius: 8px; background: transparent; color: var(--text); cursor: pointer; }
+    .theme-toggle[hidden] { display: none; }
+    .theme-toggle:hover { background: var(--surface); }
+    .theme-toggle svg { width: 22px; height: 22px; }
+    .theme-toggle .icon-sun { display: none; }
+    :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+    .about { padding: 72px 0 64px; display: grid; grid-template-columns: 112px 1fr; gap: 40px; align-items: start; }
+    .monogram { width: 112px; height: 112px; margin-top: 15px; display: grid; place-items: center; border: 1px solid var(--avatar-line); border-radius: 50%; color: var(--accent); font: 34px Georgia, serif; background: var(--avatar-bg); }
+    .eyebrow { margin: 0 0 14px; font: 11px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
+    h1 { margin: 0 0 10px; font: 52px/1.15 Georgia, "Times New Roman", serif; letter-spacing: -1.5px; }
+    .intro { max-width: 640px; margin: 0 0 14px; color: var(--intro); }
+    .links { display: flex; flex-wrap: wrap; gap: 10px 23px; margin-top: 22px; font-size: 14px; }
+    section + section { border-top: 1px solid var(--line); padding: 38px 0 42px; }
+    .section-title { display: flex; align-items: baseline; gap: 16px; margin-bottom: 26px; }
+    .number { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
+    h2 { margin: 0; font: 28px/1.3 Georgia, "Times New Roman", serif; letter-spacing: -.4px; }
+    #publications .section-title { margin-bottom: 8px; }
+    .papers { list-style: none; padding: 0; margin: 0; }
+    .paper { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 28px; padding: 28px 0; }
+    .paper + .paper { border-top: 1px solid var(--paper-line); }
+    .paper:last-child { padding-bottom: 4px; }
+    .paper-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; padding-top: 3px; }
+    .paper-body { min-width: 0; }
+    .paper h3 { margin-bottom: 7px; font-size: 18px; font-weight: 550; line-height: 1.5; letter-spacing: -.15px; }
+    .paper h3 a:hover { color: var(--paper-accent); text-decoration-thickness: 1px; }
+    .paper-uai { --paper-accent: var(--uai-link); }
+    .paper-neurips { --paper-accent: var(--neurips-link); }
+    .paper-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; color: var(--paper-link); font-size: 12px; line-height: 1.5; text-decoration: none; }
+    .paper-link:hover { color: var(--paper-accent); }
+    .year { font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); }
+    h3 { margin: 0 0 5px; font-size: 17px; font-weight: 550; line-height: 1.55; }
+    h3 a { text-decoration: none; }
+    h3 a:hover { text-decoration: underline; }
+    .authors { margin: 0; color: var(--muted); font-size: 13px; }
+    .authors strong { color: var(--author); font-weight: 500; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; color: #181a1d; font-size: 11px; font-weight: 750; line-height: 1.5; letter-spacing: .2px; }
+    .badge-uai { background: #ff700c; }
+    .badge-neurips { background: #91baff; }
+    .software { max-width: 620px; }
+    .software h3 { font-size: 20px; }
+    .software p { margin: 8px 0 14px; color: var(--muted); font-size: 14px; }
+    .software .links { margin-top: 0; font-size: 13px; }
+    footer { display: flex; justify-content: space-between; gap: 24px; padding: 24px 0 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    footer a { text-decoration: none; }
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 40px); }
+      header { justify-content: space-between; gap: 12px; padding: 23px 0; }
+      nav { gap: 18px; }
+      .about { grid-template-columns: 1fr; padding: 38px 0; gap: 22px; }
+      .monogram { width: 72px; height: 72px; margin-top: 0; font-size: 26px; }
+      h1 { font-size: 42px; }
+      .paper { grid-template-columns: 1fr; gap: 12px; padding: 24px 0; }
+      .paper-meta { flex-direction: row; align-items: center; gap: 10px; padding-top: 0; }
+      .paper h3 { font-size: 17px; }
+      section + section { padding: 30px 0; }
+      footer { font-size: 11px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      :root, :root[data-theme] { color-scheme: light; --bg: white; --text: #171717; --muted: #444; --line: #ccc; --accent: #634421; --paper-line: #ddd; --paper-link: #444; --uai-link: #634421; --neurips-link: #23488c; }
+      body { font-size: 11pt; }
+      .wrap { width: 100%; }
+      header, footer, .monogram { display: none; }
+      .about { display: block; padding-top: 0; }
+      .intro, .authors strong { color: #333; }
+      section, .paper { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#about">Skip to content</a>
+  <div class="wrap">
+    <header>
+      <nav aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#publications">Publications</a>
+        <a href="#software">Software</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme" hidden>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+      </button>
+    </header>
+    <main>
+      <section class="about" id="about" aria-labelledby="name">
+        <div class="monogram" aria-hidden="true">ZJ</div>
+        <div>
+          <p class="eyebrow">Statistics & Machine Learning</p>
+          <h1 id="name">Zhongli Jiang</h1>
+          <p class="intro">I received my Ph.D. in Statistics from Purdue University in 2024 and my master’s degree in Statistics from Purdue University in 2019. I earned my bachelor’s degree in Statistics and Operations Research from Hong Kong Baptist University in 2017. I worked as a full-stack data scientist at Sysco.</p>
+          <p class="intro">My research interests include representation learning, explainable artificial intelligence, causal inference, and bioinformatics. I also develop open-source software for statistical computing and reproducible research.</p>
+          <div class="links">
+            <a href="mailto:zhongli.jiang.stats@gmail.com">Email ↗</a>
+            <a href="https://github.com/catstats" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
+        </div>
+      </section>
+      <section id="publications" aria-labelledby="publications-title">
+        <div class="section-title"><span class="number" aria-hidden="true">01</span><h2 id="publications-title">Selected publications</h2></div>
+        <ol class="papers">
+          <li class="paper paper-uai">
+            <div class="paper-meta">
+              <span class="badge badge-uai">UAI</span>
+              <span class="year">2025</span>
+            </div>
+            <div class="paper-body">
+              <h3><a href="https://proceedings.mlr.press/v286/jiang25a.html" target="_blank" rel="noopener noreferrer">Fast Calculation of Feature Contributions in Boosting Trees</a></h3>
+              <p class="authors"><strong>Zhongli Jiang</strong>, Min Zhang, and Dabao Zhang</p>
+              <a class="paper-link" href="https://proceedings.mlr.press/v286/jiang25a.html" target="_blank" rel="noopener noreferrer" aria-label="Read Fast Calculation of Feature Contributions in Boosting Trees">Read paper <span aria-hidden="true">↗</span></a>
+            </div>
+          </li>
+          <li class="paper paper-neurips">
+            <div class="paper-meta">
+              <span class="badge badge-neurips">NeurIPS</span>
+              <span class="year">2023</span>
+            </div>
+            <div class="paper-body">
+              <h3><a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/26c233f48fb05bbd52a520e4bb9e3760-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer">Analysis of Variance of Multiple Causal Networks</a></h3>
+              <p class="authors"><strong>Zhongli Jiang</strong> and Dabao Zhang</p>
+              <a class="paper-link" href="https://proceedings.neurips.cc/paper_files/paper/2023/file/26c233f48fb05bbd52a520e4bb9e3760-Paper-Conference.pdf" target="_blank" rel="noopener noreferrer" aria-label="Read Analysis of Variance of Multiple Causal Networks">Read paper <span aria-hidden="true">↗</span></a>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <section id="software" aria-labelledby="software-title">
+        <div class="section-title"><span class="number" aria-hidden="true">02</span><h2 id="software-title">Open-source software</h2></div>
+        <div class="software">
+          <article>
+            <h3>Q-SHAP</h3>
+            <p>Feature-specific R² contributions for tree ensembles using an efficient Shapley decomposition.</p>
+            <div class="links"><a href="https://github.com/catstats/Q-SHAP" target="_blank" rel="noopener noreferrer">Python package ↗</a><a href="https://github.com/catstats/Q-SHAP_R" target="_blank" rel="noopener noreferrer">R package ↗</a></div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer><span>© 2026 Zhongli Jiang</span><a href="#top">Back to top ↑</a></footer>
+  </div>
+</body>
+</html>
