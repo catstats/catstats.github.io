@@ -3,7 +3,7 @@ Zhongli Jiang — Academic Homepage
 Public URL: https://catstats.github.io/
 Repository: https://github.com/catstats/catstats.github.io
 
-A static academic homepage with About, Publications, and Software sections.
+A static academic homepage with About, Publications, Software, and Academic Service sections.
 The moon/sun button switches between light and dark themes. The initial theme
 follows the operating system; a manual choice is saved in the browser.
 

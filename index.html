@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Zhongli Jiang — representation learning, explainable artificial intelligence, causal inference, and bioinformatics. Selected publications and open-source software.">
+  <meta name="description" content="Zhongli Jiang — representation learning, explainable artificial intelligence, causal inference, and bioinformatics. Selected publications, open-source software, and academic service.">
   <meta name="theme-color" content="#141516">
   <title>Zhongli Jiang | Statistics & Machine Learning</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -80,18 +80,25 @@
     .software h3 { font-size: 20px; }
     .software p { margin: 8px 0 14px; color: var(--muted); font-size: 14px; }
     .software .links { margin-top: 0; font-size: 13px; }
+    .service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+    .service-grid h3 { margin: 0 0 12px; color: var(--muted); font-size: 13px; font-weight: 500; }
+    .service-list { list-style: none; padding: 0; margin: 0; }
+    .service-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; font-size: 14px; line-height: 1.6; }
+    .service-list li + li { border-top: 1px solid var(--paper-line); }
+    .service-years { flex-shrink: 0; color: var(--muted); font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
     footer { display: flex; justify-content: space-between; gap: 24px; padding: 24px 0 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
     footer a { text-decoration: none; }
     @media (max-width: 640px) {
       .wrap { width: calc(100% - 40px); }
       header { justify-content: space-between; gap: 12px; padding: 23px 0; }
-      nav { gap: 18px; }
+      nav { gap: 8px 18px; }
       .about { grid-template-columns: 1fr; padding: 38px 0; gap: 22px; }
       .monogram { width: 72px; height: 72px; margin-top: 0; font-size: 26px; }
       h1 { font-size: 42px; }
       .paper { grid-template-columns: 1fr; gap: 12px; padding: 24px 0; }
       .paper-meta { flex-direction: row; align-items: center; gap: 10px; padding-top: 0; }
       .paper h3 { font-size: 17px; }
+      .service-grid { grid-template-columns: 1fr; gap: 28px; }
       section + section { padding: 30px 0; }
       footer { font-size: 11px; }
     }
@@ -115,6 +122,7 @@
         <a href="#about">About</a>
         <a href="#publications">Publications</a>
         <a href="#software">Software</a>
+        <a href="#service">Service</a>
       </nav>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme" hidden>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
@@ -170,6 +178,26 @@
             <p>Feature-specific R² contributions for tree ensembles using an efficient Shapley decomposition.</p>
             <div class="links"><a href="https://github.com/catstats/Q-SHAP" target="_blank" rel="noopener noreferrer">Python package ↗</a><a href="https://github.com/catstats/Q-SHAP_R" target="_blank" rel="noopener noreferrer">R package ↗</a></div>
           </article>
+        </div>
+      </section>
+      <section id="service" aria-labelledby="service-title">
+        <div class="section-title"><span class="number" aria-hidden="true">03</span><h2 id="service-title">Academic Service</h2></div>
+        <div class="service-grid">
+          <div>
+            <h3>Conference Reviewer</h3>
+            <ul class="service-list">
+              <li><span>NeurIPS</span><span class="service-years">2025</span></li>
+              <li><span>ICLR</span><span class="service-years">2025, 2026</span></li>
+              <li><span>UAI</span><span class="service-years">2026</span></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Journal Reviewer</h3>
+            <ul class="service-list">
+              <li>Communications Biology</li>
+              <li>JOSS</li>
+            </ul>
+          </div>
         </div>
       </section>
     </main>
