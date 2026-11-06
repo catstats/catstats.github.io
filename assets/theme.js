@@ -3,7 +3,7 @@
   const root = document.documentElement;
   const button = document.getElementById('theme-toggle');
   const browserTheme = document.querySelector('meta[name="theme-color"]');
-  const system = matchMedia('(prefers-color-scheme: dark)');
+  const defaultTheme = 'light';
   const readPreference = () => {
     try {
       const value = localStorage.getItem(key);
@@ -18,19 +18,16 @@
     button.setAttribute('aria-label', action);
     button.title = action;
   };
-  apply(preference || (system.matches ? 'dark' : 'light'));
+  apply(preference || defaultTheme);
   button.addEventListener('click', () => {
     preference = root.dataset.theme === 'dark' ? 'light' : 'dark';
     try { localStorage.setItem(key, preference); } catch (_) {}
     apply(preference);
   });
-  system.addEventListener('change', (event) => {
-    if (!preference) apply(event.matches ? 'dark' : 'light');
-  });
   window.addEventListener('storage', (event) => {
     if (event.key === key || event.key === null) {
       preference = readPreference();
-      apply(preference || (system.matches ? 'dark' : 'light'));
+      apply(preference || defaultTheme);
     }
   });
   button.hidden = false;
