@@ -9,6 +9,11 @@ follows the operating system; a manual choice is saved in the browser.
 
 Edit index.html to update content. Theme behavior is in assets/theme.js.
 
+Traffic analytics:
+  Cloudflare Web Analytics is installed for catstats.github.io.
+  View statistics in the Cloudflare dashboard under Web Analytics.
+  The installation snippet is before the closing body tag in index.html.
+
 Local preview:
   python3 -m http.server 8765 --bind 127.0.0.1
 
